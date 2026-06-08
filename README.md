@@ -2,7 +2,7 @@
 
 # 🦊 fleet-midi-foxdot
 
-> *Python live-coding MIDI patterns for the fleet*
+> *Python live-coding MIDI engine for real-time fleet music*
 
 [![CI](https://img.shields.io/github/actions/workflow/status/SuperInstance/fleet-midi-foxdot/ci.yml?style=flat-square&logo=github&label=CI)](https://github.com/SuperInstance/fleet-midi-foxdot/actions)
 [![npm](https://img.shields.io/badge/npm-%40superinstance%2Fmidi--foxdot-cb3837?style=flat-square&logo=npm)](https://www.npmjs.com/package/@superinstance/midi-foxdot)
@@ -12,7 +12,7 @@
 
 ---
 
-Bridges fleet agents to FoxDot for real-time Python live coding. Agent code becomes SuperCollider OSC messages — immediate audio from fleet decisions. Background tempo control, pattern layers, and generative structure.
+Bridges fleet agents to FoxDot for real-time Python live coding. Agent code becomes SuperCollider OSC messages — immediate audio from fleet decisions.
 
 ---
 
@@ -32,22 +32,46 @@ git clone https://github.com/SuperInstance/fleet-midi-foxdot.git
 ## 🚀 Quick Start
 
 ```bash
-# see Getting Started below
+# Send Python code to FoxDot:
+curl -X POST localhost:3007 \
+  -H "Content-Type: application/json" \
+  -d "{\"code\":\"p1 >> pads([0,4,7], dur=4)\nClock.bpm = 100\"}"
 ```
 
 ## 🏗️ Architecture
 
 ```
-Coming soon
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│   Fleet Agent Code        FoxDot → SuperCollider     │
+│   POST :3007              Clock.bpm = 120            │
+│   {"code":"..."}          p1 >> pads([0,4,7])       │
+│         │                 p2 >> bass([0,-2])        │
+│         ▼                 p3 >> play("x-o-")         │
+│   ┌──────────────┐                                   │
+│   │ FoxDot       │───▶ OSC → SuperCollider → Audio  │
+│   │ Bridge       │                                   │
+│   └──────────────┘                                   │
+│                                                     │
+│   Python live-coding = music on the fly              │
+│   Every fleet state becomes an OSC message           │
+└─────────────────────────────────────────────────────┘
 ```
 
 ## 📡 API
 
-See source code for endpoints.
+### POST /
+Send FoxDot Python code for live execution.
+
+```json
+{"code": "p1 >> pads([0,4,7], dur=4)"}
+```
+→ `{"status": "ok", "foxdot_code": "..."}`
+
 
 ## 🧪 Beta Tested
 
-Part of the [SuperInstance MIDI Fleet](https://github.com/SuperInstance/construct-coordination/blob/main/FLEET_MIDI.md). Zeroshot-verified on every push via CI.
+Part of the [SuperInstance MIDI Fleet](https://github.com/SuperInstance/construct-coordination/blob/main/FLEET_MIDI.md). Every push verified via CI — zeroshot tests ensure zero-config operation out of the box.
 
 ## 🤝 Related
 
