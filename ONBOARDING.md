@@ -1,4 +1,4 @@
-# ## 🦊  fleet-fleet-midi-foxdot — Onboarding Guide
+# 🎵 MIDI Fleet Repo — Onboarding Guide
 
 ## For Humans
 
